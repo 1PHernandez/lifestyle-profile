@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lifestyle Profile | Home Buyer Questionnaire</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F7F7F5; color: #333; min-height: 100vh; padding: 2rem 1rem; }
+  .page { max-width: 700px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 2rem; }
+  .header h1 { font-size: 28px; font-weight: 600; color: #0F6E56; letter-spacing: 0.1em; text-transform: uppercase; }
+  .accent { width: 50px; height: 3px; background: #1D9E75; border-radius: 2px; margin: 8px auto 14px; }
+  .header p { font-size: 15px; color: #666; line-height: 1.65; max-width: 520px; margin: 0 auto; }
+  .progress { display: flex; gap: 4px; margin-bottom: 1.75rem; }
+  .prog-step { flex: 1; height: 5px; border-radius: 3px; background: #DDD; transition: background 0.3s; }
+  .prog-step.done { background: #1D9E75; }
+  .prog-step.active { background: #5DCAA5; }
+  .card { background: #fff; border-radius: 12px; border: 1px solid #E8E8E4; padding: 1.5rem; margin-bottom: 1.25rem; }
+  .card-title { display: flex; align-items: center; gap: 9px; font-size: 11px; font-weight: 700; color: #0F6E56; text-transform: uppercase; letter-spacing: 0.1em; padding-bottom: 0.85rem; border-bottom: 1px solid #F0F0EC; margin-bottom: 1.1rem; }
+  .card-title i { font-size: 17px; }
+  .field { margin-bottom: 1rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 13px; font-weight: 600; color: #444; margin-bottom: 6px; }
+  .field input[type="text"], .field input[type="email"], .field input[type="tel"],
+  .field input[type="date"], .field input[type="number"],
+  .field select, .field textarea {
+    width: 100%; padding: 9px 12px; font-size: 14px; font-family: inherit;
+    border: 1px solid #DDD; border-radius: 8px; background: #FAFAF8; color: #333;
+    transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: #1D9E75; box-shadow: 0 0 0 3px rgba(29,158,117,0.12); }
+  .field textarea { resize: vertical; min-height: 72px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+  .chip { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 20px; border: 1px solid #DDD; font-size: 13px; color: #555; cursor: pointer; user-select: none; background: #fff; transition: all 0.15s; }
+  .chip:hover { border-color: #1D9E75; color: #0F6E56; }
+  .chip.on { background: #E1F5EE; border-color: #1D9E75; color: #085041; font-weight: 600; }
+  .radio-group { display: flex; flex-direction: column; gap: 7px; }
+  .radio-group.two-col-radio { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .radio-group.three-col-radio { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+  .radio-opt { display: flex; align-items: center; gap: 10px; padding: 9px 13px; border: 1px solid #E0E0DC; border-radius: 8px; cursor: pointer; transition: all 0.15s; background: #FAFAF8; }
+  .radio-opt:hover { border-color: #1D9E75; }
+  .radio-opt.on { background: #E1F5EE; border-color: #1D9E75; }
+  .radio-opt input[type="radio"] { accent-color: #0F6E56; width: 15px; height: 15px; flex-shrink: 0; }
+  .radio-opt span { font-size: 13.5px; color: #333; }
+  .yesno { display: flex; gap: 8px; margin-top: 5px; }
+  .yesno-btn { flex: 1; padding: 9px; font-size: 13.5px; font-weight: 600; border-radius: 8px; border: 1px solid #DDD; cursor: pointer; background: #FAFAF8; color: #555; text-align: center; transition: all 0.15s; }
+  .yesno-btn:hover { border-color: #1D9E75; color: #0F6E56; }
+  .yesno-btn.on-yes { background: #E1F5EE; border-color: #1D9E75; color: #085041; font-weight: 700; }
+  .yesno-btn.on-no { background: #FFF3F0; border-color: #E8A090; color: #8B3A2A; font-weight: 700; }
+  .conditional { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #E0E0DA; }
+  .conditional.show { display: block; }
+  .priority-note { font-size: 12.5px; color: #777; margin-bottom: 10px; line-height: 1.5; }
+  .prio-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid #F0F0EC; }
+  .prio-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .prio-label { flex: 1; font-size: 13.5px; color: #333; }
+  .prio-btns { display: flex; gap: 6px; flex-shrink: 0; }
+  .pb { padding: 4px 11px; font-size: 11.5px; font-weight: 600; border-radius: 20px; border: 1px solid #DDD; cursor: pointer; background: transparent; color: #777; transition: all 0.15s; }
+  .pb:hover { border-color: #1D9E75; color: #0F6E56; }
+  .pb.must { background: #085041; border-color: #085041; color: #E1F5EE; }
+  .pb.nice { background: #9FE1CB; border-color: #5DCAA5; color: #085041; }
+  .slider-row { display: flex; align-items: center; gap: 12px; }
+  .slider-row label { font-size: 12px; color: #888; min-width: 30px; }
+  .slider-row input[type="range"] { flex: 1; accent-color: #1D9E75; }
+  .slider-val { font-size: 13px; font-weight: 700; color: #0F6E56; min-width: 80px; text-align: right; }
+  .info-badge { display: inline-flex; align-items: center; gap: 6px; background: #E1F5EE; border: 1px solid #9FE1CB; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #085041; margin-bottom: 10px; }
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+  .step-label { font-size: 12.5px; color: #999; }
+  .btn { padding: 10px 22px; font-size: 14px; font-weight: 600; border-radius: 8px; border: 1px solid #DDD; cursor: pointer; background: #fff; color: #444; transition: all 0.15s; }
+  .btn:hover { background: #F5F5F3; }
+  .btn-primary { background: #0F6E56; border-color: #0F6E56; color: #fff; }
+  .btn-primary:hover { background: #085041; border-color: #085041; }
+  .btn-primary:disabled { background: #9FE1CB; border-color: #9FE1CB; cursor: not-allowed; }
+  .compliance-block { background: #F9F9F7; border: 1px solid #E0E0DA; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; }
+  .compliance-block h3 { font-size: 11px; font-weight: 700; color: #0F6E56; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+  .compliance-section { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #EAEAE4; }
+  .compliance-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .compliance-section h4 { font-size: 12px; font-weight: 700; color: #333; margin-bottom: 5px; }
+  .compliance-section p { font-size: 11.5px; color: #666; line-height: 1.65; }
+  .consent-row { display: flex; align-items: flex-start; gap: 10px; margin-top: 10px; padding: 10px 12px; background: #fff; border: 1px solid #DDD; border-radius: 8px; }
+  .consent-row input[type="checkbox"] { accent-color: #0F6E56; width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+  .consent-row label { font-size: 12px; color: #444; line-height: 1.6; cursor: pointer; }
+  .consent-row label strong { color: #0F6E56; }
+  .eho-bar { display: flex; align-items: center; gap: 12px; background: #0F6E56; color: #fff; border-radius: 8px; padding: 10px 14px; margin-top: 10px; }
+  .eho-icon { font-size: 28px; flex-shrink: 0; }
+  .eho-text { font-size: 11px; line-height: 1.55; }
+  .eho-text strong { display: block; font-size: 12px; margin-bottom: 2px; letter-spacing: 0.03em; }
+  .thankyou { text-align: center; padding: 2.5rem 1rem; }
+  .check-circle { width: 64px; height: 64px; border-radius: 50%; background: #E1F5EE; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+  .check-circle i { font-size: 32px; color: #0F6E56; }
+  .thankyou h2 { font-size: 22px; font-weight: 700; color: #0F6E56; margin-bottom: 8px; }
+  .thankyou p { font-size: 14px; color: #666; line-height: 1.7; max-width: 420px; margin: 0 auto; }
+  .form-error { background: #FEE; border: 1px solid #F99; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #C00; margin-top: 10px; }
+  .consent-error { color: #C00; font-size: 12px; margin-top: 6px; display: none; }
+  .hidden { display: none !important; }
+  @media (max-width: 560px) {
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .radio-group.two-col-radio, .radio-group.three-col-radio { grid-template-columns: 1fr; }
+    .prio-btns { flex-direction: column; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <h1>Lifestyle Profile</h1>
+    <div class="accent"></div>
+    <p>List your must haves and like to haves for your new home, so we can start your home buying journey with a clear plan.</p>
+  </div>
+
+  <!-- 8 steps -->
+  <div class="progress">
+    <div class="prog-step active" id="ps0"></div>
+    <div class="prog-step" id="ps1"></div>
+    <div class="prog-step" id="ps2"></div>
+    <div class="prog-step" id="ps3"></div>
+    <div class="prog-step" id="ps4"></div>
+    <div class="prog-step" id="ps5"></div>
+    <div class="prog-step" id="ps6"></div>
+    <div class="prog-step" id="ps7"></div>
+  </div>
+
+  <!-- ═══════════ STEP 0 — ABOUT YOU ═══════════ -->
+  <div id="step0">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-user"></i> About You</div>
+      <div class="two-col">
+        <div class="field"><label>First Name *</label><input type="text" id="fname" placeholder="Jane"></div>
+        <div class="field"><label>Last Name *</label><input type="text" id="lname" placeholder="Smith"></div>
+      </div>
+      <div class="two-col">
+        <div class="field"><label>Email *</label><input type="email" id="email" placeholder="jane@email.com"></div>
+        <div class="field"><label>Phone</label><input type="tel" id="phone" placeholder="(555) 000-0000"></div>
+      </div>
+      <div class="field">
+        <label>Who will be living in the home?</label>
+        <div class="chip-group" id="who">
+          <div class="chip" onclick="toggleChip(this)">Just me</div>
+          <div class="chip" onclick="toggleChip(this)">Me &amp; partner</div>
+          <div class="chip" onclick="toggleChip(this)">Family with children</div>
+          <div class="chip" onclick="toggleChip(this)">Multigenerational</div>
+          <div class="chip" onclick="toggleChip(this)">Roommates</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Do you have pets?</label>
+        <div class="chip-group" id="pets">
+          <div class="chip" onclick="toggleChip(this)">No pets</div>
+          <div class="chip" onclick="toggleChip(this)">Dog(s)</div>
+          <div class="chip" onclick="toggleChip(this)">Cat(s)</div>
+          <div class="chip" onclick="toggleChip(this)">Other</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Are you familiar with the area you're searching in?</label>
+        <div class="yesno" id="familiarArea">
+          <div class="yesno-btn" onclick="pickYesNo('familiarArea',this,'Yes')">✅ Yes</div>
+          <div class="yesno-btn" onclick="pickYesNo('familiarArea',this,'No')">🆕 No — I need guidance</div>
+        </div>
+      </div>
+    </div>
+    <div class="nav"><span class="step-label">Step 1 of 8</span><button class="btn btn-primary" onclick="goTo(1)">Next &rarr;</button></div>
+  </div>
+
+  <!-- ═══════════ STEP 1 — PURPOSE & SITUATION ═══════════ -->
+  <div id="step1" class="hidden">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-home-move"></i> Purpose &amp; Current Situation</div>
+      <div class="field">
+        <label>What is the purpose of this home purchase?</label>
+        <div class="radio-group three-col-radio" id="purpose">
+          <label class="radio-opt" onclick="pickRadio(this,'purpose')"><input type="radio" name="purpose"><span>🏠 Primary Residence</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'purpose')"><input type="radio" name="purpose"><span>📈 Investment Property</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'purpose')"><input type="radio" name="purpose"><span>🌴 Vacation / Second Home</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Current living situation</label>
+        <div class="radio-group" id="situation">
+          <label class="radio-opt" onclick="pickRadio(this,'situation');checkOwner()"><input type="radio" name="situation"><span>Renting — lease ending soon</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'situation');checkOwner()"><input type="radio" name="situation"><span>Renting — month-to-month / flexible</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'situation');checkOwner()"><input type="radio" name="situation"><span>Own a home — need to sell first</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'situation');checkOwner()"><input type="radio" name="situation"><span>Own a home — no sale contingency</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'situation');checkOwner()"><input type="radio" name="situation"><span>Living with family / no current lease</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label>When are you hoping to be in your new home?</label>
+        <div class="radio-group two-col-radio" id="timeline">
+          <label class="radio-opt" onclick="pickRadio(this,'timeline')"><input type="radio" name="timeline"><span>ASAP — ready to move</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'timeline')"><input type="radio" name="timeline"><span>Within 3 months</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'timeline')"><input type="radio" name="timeline"><span>3–6 months</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'timeline')"><input type="radio" name="timeline"><span>6–12 months</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'timeline')"><input type="radio" name="timeline"><span>Just researching</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label>What's driving your move? <span style="font-weight:400;color:#999">(optional)</span></label>
+        <textarea id="motivation" placeholder="e.g. Growing family, relocating for work, ready to stop renting…"></textarea>
+      </div>
+    </div>
+    <div class="nav"><button class="btn" onclick="goTo(0)">&larr; Back</button><span class="step-label">Step 2 of 8</span><button class="btn btn-primary" onclick="goTo(2)">Next &rarr;</button></div>
+  </div>
+
+  <!-- ═══════════ STEP 2 — CURRENT HOME (conditional) ═══════════ -->
+  <div id="step2" class="hidden">
+    <div class="card" id="currentHomeCard">
+      <div class="card-title"><i class="ti ti-building-estate"></i> Your Current Home</div>
+      <div id="ownerSection">
+        <div class="info-badge"><i class="ti ti-info-circle"></i> Since you own a home, we have a few extra questions to help plan your timeline.</div>
+        <div class="field">
+          <label>Is your current home listed for sale?</label>
+          <div class="yesno" id="homeListed">
+            <div class="yesno-btn" onclick="pickYesNo('homeListed',this,'Yes');toggleConditional('listedDetails','homeListed','Yes')">✅ Yes</div>
+            <div class="yesno-btn" onclick="pickYesNo('homeListed',this,'No');toggleConditional('listedDetails','homeListed','No')">❌ Not yet</div>
+          </div>
+          <div class="conditional" id="listedDetails">
+            <div class="two-col">
+              <div class="field"><label>List price</label><input type="text" id="listPrice" placeholder="e.g. $425,000"></div>
+              <div class="field"><label>Days on market</label><input type="number" id="daysOnMarket" placeholder="e.g. 14"></div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Do you need to sell your current home before buying?</label>
+          <div class="yesno" id="needToSell">
+            <div class="yesno-btn" onclick="pickYesNo('needToSell',this,'Yes')">✅ Yes</div>
+            <div class="yesno-btn" onclick="pickYesNo('needToSell',this,'No')">❌ No</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>How long have you owned your current home?</label>
+          <input type="text" id="yearsOwned" placeholder="e.g. 5 years">
+        </div>
+      </div>
+      <div id="nonOwnerSection" class="hidden">
+        <div class="info-badge"><i class="ti ti-info-circle"></i> No current home to sell — great, that simplifies your timeline!</div>
+      </div>
+    </div>
+
+    <!-- RELOCATION SECTION -->
+    <div class="card">
+      <div class="card-title"><i class="ti ti-plane-departure"></i> Relocation</div>
+      <div class="field">
+        <label>Are you relocating from another city or state?</label>
+        <div class="yesno" id="isRelocating">
+          <div class="yesno-btn" onclick="pickYesNo('isRelocating',this,'Yes');toggleConditional('reloDetails','isRelocating','Yes')">✅ Yes</div>
+          <div class="yesno-btn" onclick="pickYesNo('isRelocating',this,'No');toggleConditional('reloDetails','isRelocating','No')">❌ No</div>
+        </div>
+        <div class="conditional" id="reloDetails">
+          <div class="two-col">
+            <div class="field"><label>Relocating from (city / state)</label><input type="text" id="reloFrom" placeholder="e.g. Atlanta, GA"></div>
+            <div class="field"><label>Target arrival date</label><input type="date" id="arrivalDate"></div>
+          </div>
+          <div class="field">
+            <label>Is this a company-directed / employer move?</label>
+            <div class="yesno" id="companyMove">
+              <div class="yesno-btn" onclick="pickYesNo('companyMove',this,'Yes');toggleConditional('companyDetails','companyMove','Yes')">✅ Yes</div>
+              <div class="yesno-btn" onclick="pickYesNo('companyMove',this,'No');toggleConditional('companyDetails','companyMove','No')">❌ No</div>
+            </div>
+            <div class="conditional" id="companyDetails">
+              <div class="two-col">
+                <div class="field"><label>Company name</label><input type="text" id="companyName" placeholder="e.g. Lockheed Martin"></div>
+                <div class="field"><label>Employment start date</label><input type="date" id="employmentStart"></div>
+              </div>
+              <div class="field"><label>Company address (city / state)</label><input type="text" id="companyAddress" placeholder="e.g. Orlando, FL"></div>
+              <div class="field">
+                <label>Is a relocation company involved?</label>
+                <div class="yesno" id="reloCompany">
+                  <div class="yesno-btn" onclick="pickYesNo('reloCompany',this,'Yes');toggleConditional('reloCompanyDetails','reloCompany','Yes')">✅ Yes</div>
+                  <div class="yesno-btn" onclick="pickYesNo('reloCompany',this,'No');toggleConditional('reloCompanyDetails','reloCompany','No')">❌ No</div>
+                </div>
+                <div class="conditional" id="reloCompanyDetails">
+                  <div class="field"><label>Relocation company name</label><input type="text" id="reloCompanyName" placeholder="e.g. Cartus, SIRVA, AIReS"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav"><button class="btn" onclick="goTo(1)">&larr; Back</button><span class="step-label">Step 3 of 8</span><button class="btn btn-primary" onclick="goTo(3)">Next &rarr;</button></div>
+  </div>
+
+  <!-- ═══════════ STEP 3 — BUDGET & FINANCING ═══════════ -->
+  <div id="step3" class="hidden">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-currency-dollar"></i> Budget &amp; Financing</div>
+      <div class="field">
+        <label>Financing status</label>
+        <div class="radio-group two-col-radio" id="financing">
+          <label class="radio-opt" onclick="pickRadio(this,'financing')"><input type="radio" name="financing"><span>Pre-approved — I have a letter</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'financing')"><input type="radio" name="financing"><span>Pre-qualified — general idea</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'financing')"><input type="radio" name="financing"><span>Haven't started — need referral</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'financing')"><input type="radio" name="financing"><span>Cash buyer</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Target purchase price range</label>
+        <div class="slider-row" style="margin-bottom:10px">
+          <label>Min</label>
+          <input type="range" id="priceMin" min="100000" max="2000000" step="25000" value="300000" oninput="updateSliders()">
+          <span class="slider-val" id="priceMinVal">$300,000</span>
+        </div>
+        <div class="slider-row">
+          <label>Max</label>
+          <input type="range" id="priceMax" min="100000" max="2000000" step="25000" value="550000" oninput="updateSliders()">
+          <span class="slider-val" id="priceMaxVal">$550,000</span>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="field">
+          <label>Down payment available</label>
+          <select id="downpayment">
+            <option>Less than 5%</option><option>5–10%</option><option selected>10–20%</option><option>20%+</option><option>Cash — full purchase</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Buyer status</label>
+          <select id="buyerstatus">
+            <option>First-time buyer</option><option>I've bought before</option><option>Investor / additional property</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="nav"><button class="btn" onclick="goTo(2)">&larr; Back</button><span class="step-label">Step 4 of 8</span><button class="btn btn-primary" onclick="goTo(4)">Next &rarr;</button></div>
+  </div>
+
+  <!-- ═══════════ STEP 4 — LOCATION & COMMUNITY ═══════════ -->
+  <div id="step4" class="hidden">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-building-community"></i> Location &amp; Community</div>
+      <div class="two-col">
+        <div class="field"><label>Preferred city / area</label><input type="text" id="city" placeholder="e.g. Orlando, FL"></div>
+        <div class="field"><label>Zip codes or neighborhoods</label><input type="text" id="zip" placeholder="e.g. 32801, Thornton Park"></div>
+      </div>
+      <div class="field">
+        <label>Would you consider an HOA community?</label>
+        <div class="yesno" id="hoaOk">
+          <div class="yesno-btn" onclick="pickYesNo('hoaOk',this,'Yes')">✅ Yes</div>
+          <div class="yesno-btn" onclick="pickYesNo('hoaOk',this,'No — prefer no HOA')">❌ No — prefer no HOA</div>
+          <div class="yesno-btn" onclick="pickYesNo('hoaOk',this,'Open to it')">🤔 Open to it</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Community vibe — check all that apply</label>
+        <div class="chip-group" id="vibe">
+          <div class="chip" onclick="toggleChip(this)">Top-rated schools</div>
+          <div class="chip" onclick="toggleChip(this)">Walkable to shops</div>
+          <div class="chip" onclick="toggleChip(this)">Quiet &amp; suburban</div>
+          <div class="chip" onclick="toggleChip(this)">Urban / city center</div>
+          <div class="chip" onclick="toggleChip(this)">Near parks &amp; trails</div>
+          <div class="chip" onclick="toggleChip(this)">55+ community</div>
+          <div class="chip" onclick="toggleChip(this)">Golf community</div>
+          <div class="chip" onclick="toggleChip(this)">Waterfront / lakefront</div>
+          <div class="chip" onclick="toggleChip(this)">Gated community</div>
+          <div class="chip" onclick="toggleChip(this)">Near family</div>
+          <div class="chip" onclick="toggleChip(this)">Near major highways</div>
+          <div class="chip" onclick="toggleChip(this)">Near airport</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Maximum comfortable commute</label>
+        <div class="radio-group two-col-radio" id="commute">
+          <label class="radio-opt" onclick="pickRadio(this,'commute')"><input type="radio" name="commute"><span>Under 15 min</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'commute')"><input type="radio" name="commute"><span>15–30 min</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'commute')"><input type="radio" name="commute"><span>30–45 min</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'commute')"><input type="radio" name="commute"><span>No commute / remote</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="nav"><button class="btn" onclick="goTo(3)">&larr; Back</button><span class="step-label">Step 5 of 8</span><button class="btn btn-primary" onclick="goTo(5)">Next &rarr;</button></div>
+  </div>
+
+  <!-- ═══════════ STEP 5 — HOME TYPE, SIZE & KEY FEATURES ═══════════ -->
+  <div id="step5" class="hidden">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-home"></i> Home Type &amp; Size</div>
+      <div class="field">
+        <label>Property type — check all you'd consider</label>
+        <div class="chip-group" id="proptype">
+          <div class="chip" onclick="toggleChip(this)">Single-family</div>
+          <div class="chip" onclick="toggleChip(this)">Townhome</div>
+          <div class="chip" onclick="toggleChip(this)">Condo / flat</div>
+          <div class="chip" onclick="toggleChip(this)">Villa</div>
+          <div class="chip" onclick="toggleChip(this)">New construction</div>
+          <div class="chip" onclick="toggleChip(this)">Fixer-upper</div>
+          <div class="chip" onclick="toggleChip(this)">Multi-family / duplex</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="field"><label>Bedrooms needed</label><select id="beds"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5+</option></select></div>
+        <div class="field"><label>Bathrooms needed</label><select id="baths"><option>1</option><option selected>2</option><option>3</option><option>4+</option></select></div>
+      </div>
+      <div class="field">
+        <label>Minimum square footage</label>
+        <div class="slider-row">
+          <input type="range" id="sqft" min="500" max="6000" step="100" value="1800" oninput="updateSqft()">
+          <span class="slider-val" id="sqftVal">1,800 sq ft</span>
+        </div>
+      </div>
+
+      <!-- KEY FEATURE YES/NO -->
+      <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid #F0F0EC;">
+        <p style="font-size:13px;font-weight:600;color:#444;margin-bottom:12px;">Key Features — Yes or No?</p>
+        <div class="two-col">
+          <div class="field">
+            <label>Garage</label>
+            <div class="yesno" id="hasGarage">
+              <div class="yesno-btn" onclick="pickYesNo('hasGarage',this,'Yes — required')">✅ Yes</div>
+              <div class="yesno-btn" onclick="pickYesNo('hasGarage',this,'No — not needed')">❌ No</div>
+            </div>
+            <div style="margin-top:8px">
+              <select id="garageSize" style="width:100%;padding:8px 12px;font-size:13px;border:1px solid #DDD;border-radius:8px;background:#FAFAF8;color:#555;outline:none;">
+                <option value="">Garage size (optional)</option>
+                <option>1-car garage</option>
+                <option>2-car garage</option>
+                <option>3-car garage</option>
+                <option>Carport is fine</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Pool</label>
+            <div class="yesno" id="hasPool">
+              <div class="yesno-btn" onclick="pickYesNo('hasPool',this,'Yes — required')">✅ Yes</div>
+              <div class="yesno-btn" onclick="pickYesNo('hasPool',this,'Nice to have')">🤔 Nice to have</div>
+              <div class="yesno-btn" onclick="pickYesNo('hasPool',this,'No — not needed')">❌ No</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-star"></i> Must Have vs. Like to Have</div>
+      <p class="priority-note">Tap <strong>Must Have</strong> for non-negotiables, <strong>Like to Have</strong> for nice extras. Leave blank if it doesn't matter.</p>
+      <div id="priorities"></div>
+    </div>
+    <div class="nav"><button class="btn" onclick="goTo(4)">&larr; Back</button><span class="step-label">Step 6 of 8</span><button class="btn btn-primary" onclick="goTo(6)">Next &rarr;</button></div>
+  </div>
+
+  <!-- ═══════════ STEP 6 — DEAL BREAKERS ═══════════ -->
+  <div id="step6" class="hidden">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-alert-triangle"></i> Deal Breakers</div>
+      <div class="field">
+        <label>What would make you walk away from a home immediately?</label>
+        <div class="chip-group" id="dealbreakers">
+          <div class="chip" onclick="toggleChip(this)">Busy road / traffic noise</div>
+          <div class="chip" onclick="toggleChip(this)">No garage</div>
+          <div class="chip" onclick="toggleChip(this)">HOA restrictions</div>
+          <div class="chip" onclick="toggleChip(this)">Flood zone</div>
+          <div class="chip" onclick="toggleChip(this)">Old roof / AC</div>
+          <div class="chip" onclick="toggleChip(this)">No yard / small lot</div>
+          <div class="chip" onclick="toggleChip(this)">Poor school district</div>
+          <div class="chip" onclick="toggleChip(this)">Far from family</div>
+          <div class="chip" onclick="toggleChip(this)">Requires major repairs</div>
+          <div class="chip" onclick="toggleChip(this)">No natural light</div>
+          <div class="chip" onclick="toggleChip(this)">No pool</div>
+          <div class="chip" onclick="toggleChip(this)">No laundry room</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Anything else we should know? Hopes, concerns, or special circumstances.</label>
+        <textarea id="notes" placeholder="Accessibility needs, home office requirements, expecting a baby, specific school zoning, etc…"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-users"></i> Working Together</div>
+      <div class="field">
+        <label>Have you worked with a buyer's agent before?</label>
+        <div class="radio-group two-col-radio" id="agentexp">
+          <label class="radio-opt" onclick="pickRadio(this,'agentexp')"><input type="radio" name="agentexp"><span>Yes, I have</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'agentexp')"><input type="radio" name="agentexp"><span>No, first time</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'agentexp')"><input type="radio" name="agentexp"><span>Searching on my own</span></label>
+          <label class="radio-opt" onclick="pickRadio(this,'agentexp')"><input type="radio" name="agentexp"><span>With another agent now</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label>How did you hear about us?</label>
+        <select id="heardabout">
+          <option>Referral from friend or family</option><option>Google search</option><option>Social media</option>
+          <option>Zillow / Realtor.com</option><option>Open house</option><option>Sign / billboard</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Best way to reach you?</label>
+        <div class="chip-group" id="contact">
+          <div class="chip" onclick="toggleChip(this)">Phone call</div>
+          <div class="chip" onclick="toggleChip(this)">Text message</div>
+          <div class="chip" onclick="toggleChip(this)">Email</div>
+          <div class="chip" onclick="toggleChip(this)">Video call</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Best time to reach you</label>
+        <input type="text" id="besttime" placeholder="e.g. Weekdays after 5pm, anytime weekends">
+      </div>
+    </div>
+    <div class="nav"><button class="btn" onclick="goTo(5)">&larr; Back</button><span class="step-label">Step 7 of 8</span><button class="btn btn-primary" onclick="goTo(7)">Next &rarr;</button></div>
+  </div>
+
+  <!-- ═══════════ STEP 7 — ANYTHING ELSE + COMPLIANCE ═══════════ -->
+  <div id="step7" class="hidden">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-message-circle"></i> Anything Else We Can Help With?</div>
+      <p style="font-size:13px;color:#666;margin-bottom:1rem;line-height:1.6;">We're here for more than just finding a home. Let us know if any of these apply — we can connect you with the right people.</p>
+      <div class="field">
+        <label>Additional services you may need</label>
+        <div class="chip-group" id="additionalServices">
+          <div class="chip" onclick="toggleChip(this)">Mortgage lender referral</div>
+          <div class="chip" onclick="toggleChip(this)">Home inspector referral</div>
+          <div class="chip" onclick="toggleChip(this)">Title company referral</div>
+          <div class="chip" onclick="toggleChip(this)">Home insurance referral</div>
+          <div class="chip" onclick="toggleChip(this)">Moving company referral</div>
+          <div class="chip" onclick="toggleChip(this)">Interior designer / stager</div>
+          <div class="chip" onclick="toggleChip(this)">Property management</div>
+          <div class="chip" onclick="toggleChip(this)">Sell my current home too</div>
+          <div class="chip" onclick="toggleChip(this)">School / neighborhood info</div>
+          <div class="chip" onclick="toggleChip(this)">New construction guidance</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Is there anything else you'd like us to know or help with?</label>
+        <textarea id="anythingElse" placeholder="Dream features, concerns, questions, or anything on your mind — we want to know!"></textarea>
+      </div>
+    </div>
+
+    <!-- COMPLIANCE BLOCK -->
+    <div class="compliance-block">
+      <h3><i class="ti ti-shield-check" style="font-size:15px"></i> Important Disclosures &amp; Your Rights</h3>
+      <div class="compliance-section">
+        <h4>🏛️ Florida Real Estate Agency Disclosure — F.S. § 475.278</h4>
+        <p><strong>FLORIDA LAW REQUIRES THAT REAL ESTATE LICENSEES OPERATING AS SINGLE AGENTS DISCLOSE TO BUYERS AND SELLERS THEIR DUTIES.</strong> As a single agent, your licensee owes you the following duties: dealing honestly and fairly; loyalty; confidentiality; obedience; full disclosure; accounting for all funds; skill, care, and diligence; presenting all offers in a timely manner; and disclosing all known facts that materially affect the value of residential real property. You should not assume that any real estate broker represents you unless you agree to engage them in an authorized brokerage relationship. A formal written representation agreement will be provided before any property showings.</p>
+      </div>
+      <div class="compliance-section">
+        <h4>📋 Buyer Broker Compensation Disclosure — NAR Settlement</h4>
+        <p>Broker compensation is <strong>not set by law and is fully negotiable</strong>. Submitting this form does not create an agency relationship or obligate you to any compensation agreement. A separate written Buyer Broker Agreement outlining services and compensation will be presented and signed before touring properties, per MLS practice changes effective August 2024.</p>
+      </div>
+      <div class="compliance-section">
+        <h4>🏠 Fair Housing &amp; Equal Opportunity</h4>
+        <p>We are committed to the letter and spirit of the U.S. Fair Housing Act. We do not discriminate on the basis of race, color, religion, sex, national origin, disability, familial status, or any other protected class under federal, state, or local law. All clients receive equal, professional service.</p>
+        <div class="eho-bar">
+          <span class="eho-icon">⌂</span>
+          <div class="eho-text">
+            <strong>EQUAL HOUSING OPPORTUNITY</strong>
+            We are pledged to the letter and spirit of U.S. policy for the achievement of equal housing opportunity throughout the Nation.
+          </div>
+        </div>
+      </div>
+      <div class="compliance-section">
+        <h4>📱 Contact &amp; Communication Consent — TCPA</h4>
+        <p>By providing your phone number and submitting this form, you understand that you may be contacted by a licensed real estate agent regarding your home search. Message and data rates may apply. You may opt out at any time by replying STOP. This consent is not a condition of any purchase or service. Our practices comply with TCPA and FCC rules effective January 27, 2025.</p>
+        <div class="consent-row">
+          <input type="checkbox" id="tcpaConsent">
+          <label for="tcpaConsent"><strong>I consent</strong> to being contacted by phone call, text message, and/or email regarding my home search. I understand this consent is not required to receive real estate services.</label>
+        </div>
+        <div class="consent-error" id="tcpaError">⚠ Please check the box above to confirm your contact consent before submitting.</div>
+      </div>
+      <div class="compliance-section">
+        <h4>🔒 Privacy &amp; Data Use Notice</h4>
+        <p>The information you provide is collected solely to assist you in your home search. Your personal information will not be sold to third parties. It may be shared only with lenders, title companies, or service providers directly involved in your transaction. You may request to view, update, or delete your information at any time by contacting us directly.</p>
+      </div>
+      <p style="font-size:10.5px;color:#999;line-height:1.6;margin-top:8px;">
+        This form does not constitute a binding contract, listing agreement, or buyer representation agreement. All services provided by a licensed Florida real estate professional. &copy; <span id="yr"></span> &nbsp;|&nbsp; Licensed Real Estate Brokerage &nbsp;|&nbsp; Florida License # [YOUR LICENSE #]
+      </p>
+    </div>
+
+    <div id="formError" class="form-error hidden">Something went wrong. Please try again or contact us directly.</div>
+    <div class="nav">
+      <button class="btn" onclick="goTo(6)">&larr; Back</button>
+      <span class="step-label">Step 8 of 8</span>
+      <button class="btn btn-primary" id="submitBtn" onclick="submitForm()">Submit My Profile ✓</button>
+    </div>
+  </div>
+
+  <!-- THANK YOU -->
+  <div id="stepDone" class="hidden">
+    <div class="card thankyou">
+      <div class="check-circle"><i class="ti ti-check"></i></div>
+      <h2>Your Lifestyle Profile is Submitted!</h2>
+      <p>Thank you for sharing your vision with us. We'll review your must haves and preferences and reach out within one business day to start your personalized home search.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyRqNZ7FukeAOjILCYviShoytdOuL_PPKzGdyZ_4tA8_XZYOSuGgBLqEigHPtt1Eajn/exec';
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+const features = [
+  "Primary bedroom on main floor","Open-concept kitchen & living","Home office / flex room",
+  "3-car garage","Large backyard / outdoor space","Screened lanai / covered patio",
+  "Dedicated laundry room","Eat-in kitchen or breakfast nook","Walk-in pantry",
+  "Formal dining room","Bonus room / loft / media room","In-law suite / guest suite",
+  "High ceilings (10 ft+)","Smart home features","Solar / energy efficient",
+  "EV charger in garage","Extra storage / workshop","Waterfront or water view",
+  "Cul-de-sac / low-traffic location","Fenced yard"
+];
+
+function buildPriorities() {
+  document.getElementById('priorities').innerHTML = features.map((f,i) => `
+    <div class="prio-row">
+      <span class="prio-label">${f}</span>
+      <div class="prio-btns">
+        <button class="pb" id="must${i}" onclick="setPrio(${i},'must')">Must Have</button>
+        <button class="pb" id="nice${i}" onclick="setPrio(${i},'nice')">Like to Have</button>
+      </div>
+    </div>`).join('');
+}
+
+function setPrio(i,t){
+  const m=document.getElementById('must'+i),n=document.getElementById('nice'+i);
+  if(t==='must'){m.classList.toggle('must');n.classList.remove('nice');}
+  else{n.classList.toggle('nice');m.classList.remove('must');}
+}
+function toggleChip(el){el.classList.toggle('on');}
+function pickRadio(el,g){
+  document.querySelectorAll('#'+g+' .radio-opt').forEach(o=>o.classList.remove('on'));
+  el.classList.add('on');
+}
+function pickYesNo(groupId, el, value){
+  document.querySelectorAll('#'+groupId+' .yesno-btn').forEach(b=>{
+    b.classList.remove('on-yes','on-no');
+  });
+  el.classList.add(value.startsWith('No') || value.startsWith('❌') ? 'on-no' : 'on-yes');
+  el.dataset.value = value;
+}
+function getYesNo(groupId){
+  const btn = document.querySelector('#'+groupId+' .yesno-btn.on-yes, #'+groupId+' .yesno-btn.on-no');
+  return btn ? (btn.dataset.value || btn.textContent.trim()) : 'Not answered';
+}
+function toggleConditional(sectionId, groupId, showValue){
+  const section = document.getElementById(sectionId);
+  const btn = document.querySelector('#'+groupId+' .yesno-btn.on-yes, #'+groupId+' .yesno-btn.on-no');
+  if(btn && (btn.dataset.value || btn.textContent).includes('Yes')){
+    section.classList.add('show');
+  } else {
+    section.classList.remove('show');
+  }
+}
+function checkOwner(){
+  const selected = document.querySelector('#situation .radio-opt.on span');
+  const isOwner = selected && selected.textContent.includes('Own');
+  document.getElementById('ownerSection').classList.toggle('hidden', !isOwner);
+  document.getElementById('nonOwnerSection').classList.toggle('hidden', isOwner);
+}
+function updateSliders(){
+  document.getElementById('priceMinVal').textContent='$'+parseInt(document.getElementById('priceMin').value).toLocaleString();
+  document.getElementById('priceMaxVal').textContent='$'+parseInt(document.getElementById('priceMax').value).toLocaleString();
+}
+function updateSqft(){
+  document.getElementById('sqftVal').textContent=parseInt(document.getElementById('sqft').value).toLocaleString()+' sq ft';
+}
+function goTo(step){
+  for(let i=0;i<=7;i++) document.getElementById('step'+i).classList.add('hidden');
+  document.getElementById('step'+step).classList.remove('hidden');
+  for(let i=0;i<8;i++){
+    const ps=document.getElementById('ps'+i);
+    ps.classList.remove('done','active');
+    if(i<step) ps.classList.add('done');
+    else if(i===step) ps.classList.add('active');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function getChips(id){
+  return Array.from(document.querySelectorAll('#'+id+' .chip.on')).map(c=>c.textContent.trim()).join(', ')||'None selected';
+}
+function getRadio(id){
+  const el=document.querySelector('#'+id+' .radio-opt.on span');
+  return el?el.textContent.trim():'Not answered';
+}
+function getPriorities(){
+  const must=[],nice=[];
+  features.forEach((f,i)=>{
+    if(document.getElementById('must'+i).classList.contains('must')) must.push(f);
+    if(document.getElementById('nice'+i).classList.contains('nice')) nice.push(f);
+  });
+  return{must:must.length?must.join(', '):'None selected',nice:nice.length?nice.join(', '):'None selected'};
+}
+function val(id){ const el=document.getElementById(id); return el?el.value.trim()||'—':'—'; }
+
+async function submitForm(){
+  const btn=document.getElementById('submitBtn');
+  const errEl=document.getElementById('formError');
+  const tcpaErr=document.getElementById('tcpaError');
+  errEl.classList.add('hidden');
+  tcpaErr.style.display='none';
+  const fname=document.getElementById('fname').value.trim();
+  const lname=document.getElementById('lname').value.trim();
+  const email=document.getElementById('email').value.trim();
+  if(!fname||!lname||!email){goTo(0);alert('Please fill in your first name, last name, and email before submitting.');return;}
+  if(!document.getElementById('tcpaConsent').checked){
+    tcpaErr.style.display='block';
+    document.getElementById('tcpaConsent').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  btn.disabled=true; btn.textContent='Submitting…';
+  const prio=getPriorities();
+  const payload={
+    'Submission Date': new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}),
+    'Full Name': fname+' '+lname,
+    'Email': email,
+    'Phone': val('phone'),
+    'Household Members': getChips('who'),
+    'Pets': getChips('pets'),
+    'Familiar With Area': getYesNo('familiarArea'),
+    'Purchase Purpose': getRadio('purpose'),
+    'Current Situation': getRadio('situation'),
+    'Move-in Timeline': getRadio('timeline'),
+    'Motivation': val('motivation'),
+    // Current home
+    'Current Home Listed': getYesNo('homeListed'),
+    'List Price': val('listPrice'),
+    'Days On Market': val('daysOnMarket'),
+    'Need To Sell First': getYesNo('needToSell'),
+    'Years Owned Current Home': val('yearsOwned'),
+    // Relocation
+    'Relocating': getYesNo('isRelocating'),
+    'Relocating From': val('reloFrom'),
+    'Arrival Date': val('arrivalDate'),
+    'Company Directed Move': getYesNo('companyMove'),
+    'Company Name': val('companyName'),
+    'Employment Start Date': val('employmentStart'),
+    'Company Address': val('companyAddress'),
+    'Relocation Company Involved': getYesNo('reloCompany'),
+    'Relocation Company Name': val('reloCompanyName'),
+    // Budget
+    'Financing Status': getRadio('financing'),
+    'Price Range Min': '$'+parseInt(document.getElementById('priceMin').value).toLocaleString(),
+    'Price Range Max': '$'+parseInt(document.getElementById('priceMax').value).toLocaleString(),
+    'Down Payment': val('downpayment'),
+    'Buyer Status': val('buyerstatus'),
+    // Location
+    'HOA Community': getYesNo('hoaOk'),
+    'Preferred Area': val('city'),
+    'Zip / Neighborhood': val('zip'),
+    'Community Vibe': getChips('vibe'),
+    'Max Commute': getRadio('commute'),
+    // Home
+    'Property Type': getChips('proptype'),
+    'Bedrooms': val('beds'),
+    'Bathrooms': val('baths'),
+    'Min Square Footage': parseInt(document.getElementById('sqft').value).toLocaleString()+' sq ft',
+    'Garage': getYesNo('hasGarage'),
+    'Garage Size': val('garageSize'),
+    'Pool': getYesNo('hasPool'),
+    'Must Haves': prio.must,
+    'Like to Haves': prio.nice,
+    // Deal breakers
+    'Deal Breakers': getChips('dealbreakers'),
+    'Additional Notes': val('notes'),
+    // Working together
+    'Agent Experience': getRadio('agentexp'),
+    'Heard About Us': val('heardabout'),
+    'Best Contact': getChips('contact'),
+    'Best Time': val('besttime'),
+    // Final
+    'Additional Services Needed': getChips('additionalServices'),
+    'Anything Else': val('anythingElse'),
+    'TCPA Consent': 'Yes — consented on '+new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})
+  };
+  try{
+    await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    for(let i=0;i<=7;i++) document.getElementById('step'+i).classList.add('hidden');
+    document.getElementById('stepDone').classList.remove('hidden');
+    for(let i=0;i<8;i++){const ps=document.getElementById('ps'+i);ps.classList.remove('active');ps.classList.add('done');}
+    window.scrollTo({top:0,behavior:'smooth'});
+  } catch(e){
+    errEl.classList.remove('hidden');
+    btn.disabled=false; btn.textContent='Submit My Profile ✓';
+  }
+}
+// Init
+buildPriorities();
+checkOwner();
+</script>
+</body>
+</html>
